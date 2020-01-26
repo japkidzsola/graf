@@ -36,6 +36,123 @@ namespace GrafFeladat_CSharp
             }
         }
 
+        //szélesség
+        public Graf(int kezdopont)
+        {
+            HashSet<int> bejart = new HashSet<int>();
+
+            Queue<int> kovetkezok = new Queue<int>();
+            kovetkezok.Add(kezdopont);
+            bejart.Add(kezdopont);
+
+            foreach (var k in kovetkezok)
+	        {
+                k = kovetkezok.Dequeue();
+
+                Console.WriteLine(this.csucsok[k]);
+
+                foreach (El el in this.elek)
+	            {
+                    if((el.Csucs1 == k) && (!bejart.Contains(el.Csucs2)))
+                    {
+                        kovetkezok.Enqueue(el.Csucs2);
+                        bejart.Add(el.Csucs2);
+                    }
+	            }
+	        }
+
+            
+        }
+
+        //mélység 1.
+        public Graf(int kezdopont)
+        {
+            HashSet<int> bejart = new HashSet<int>();
+            
+            Stack<int> kovetkezok = new Stack<int>();
+            kovetkezok.Push(kezdopont);
+            bejart.Add(kezdopont());
+
+            foreach (var k in kovetkezok)
+	        {
+                k = kovetkezok.Pop();
+                
+                Console.WriteLine(this.csucsok[k]);
+
+                foreach (El el in elek)
+	            {
+                    if((el.Csucs1 == k) && (!bejart.Contains(el.Csucs2)))
+                        {
+                            kovetkezok.Pop(el.Csucs2);
+                            bejart.Add(el.Csucs2);
+                        }
+	            }
+	        }   
+        }
+
+        //összefüggőség
+        public Graf(bool e)
+        {
+            HashSet<int> bejart = new HashSet<int>();
+
+            Queue<int> kovetkezok = new Queue<int>();
+            kovetkezok.Add(0);
+            bejart.Add(0);
+
+            foreach (var k in kovetkezok)
+	        {
+                k = kovetkezok.Enqueue();
+
+                foreach (El el in elek)
+	            {
+                    if((el.Csucs1 == k) && (!bejart.Contains(el.Csucs2)))
+                        {
+                            kovetkezok.Enqueue(el.Csucs2);
+                            bejart.Add(el.Csucs2);
+                        }
+	            }
+	        }
+
+            if(bejart.Count == this.csucsokSzama)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+        }
+
+        //feszítőfa
+        public Graf Feszitofa()
+        {
+            Graf fa = new Graf(this.csucsokSzama);
+
+            HashSet<int> bejart = new HashSet<int>();
+            Queue<int> kovetkezok = new Queue<int>();
+            kovetkezok.Add(0);
+            bejart.Add(0);
+
+            foreach (var k in kovetkezok)
+	        {
+                k = kovetkezok.Enqueue();
+
+                foreach (El el in elek)
+	            {
+                    if(el.Csucs1 == el)
+                    {
+                        if(!bejart.Contains(el.Csucs2))
+                        {
+                            bejart.Add(el.Csucs2);
+                            kovetkezok.Enqueue(el.Csucs1);
+                            fa.Add(el.Csucs1,el.Csucs2);
+                        }
+                    }
+	            }
+	        }
+            return fa;
+        }
+
         /// <summary>
         /// Hozzáad egy új élt a gráfhoz.
         /// Mindkét csúcsnak érvényesnek kell lennie:
